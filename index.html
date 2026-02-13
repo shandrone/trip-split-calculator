@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gadhar Doler Banff Trip</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#1a73e8">
@@ -30,6 +30,7 @@
             padding-bottom: 30px;
         }
 
+        /* --- HERO BANNER --- */
         .hero-banner {
             position: relative;
             width: 100%;
@@ -51,7 +52,7 @@
 
         .hero-banner h1 {
             color: white;
-            font-size: 1.8rem; /* Adjusted for longer title */
+            font-size: 1.8rem;
             text-align: center;
             padding: 0 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -66,10 +67,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             padding: 8px 12px;
             border-radius: 12px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
 
         .zoom-slider-container {
@@ -81,13 +82,13 @@
             flex-grow: 1;
         }
 
-        input[type="range"] { flex-grow: 1; accent-color: var(--primary); }
+        input[type="range"] { flex-grow: 1; accent-color: var(--primary); height: 4px; }
 
         .edit-banner-btn {
             background: white;
             color: #333;
             border: none;
-            padding: 6px 10px;
+            padding: 6px 12px;
             border-radius: 8px;
             font-size: 11px;
             font-weight: bold;
@@ -97,15 +98,36 @@
         .container { width: 92%; max-width: 450px; margin: 0 auto; }
         .card { background: var(--card-bg); padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        
         .input-row { display: flex; gap: 8px; }
-        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        button { padding: 14px; background-color: var(--success); color: white; border: none; border-radius: 8px; font-weight: bold; touch-action: manipulation; }
+        input[type="text"], input[type="number"], select { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 8px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            box-sizing: border-box;
+        }
+
+        button { padding: 14px; background-color: var(--success); color: white; border: none; border-radius: 8px; font-weight: bold; touch-action: manipulation; cursor: pointer; }
         .btn-primary { background-color: var(--primary); width: 100%; }
         .btn-danger { background-color: var(--danger); width: 100%; margin-top: 10px; }
         .btn-outline { background-color: transparent; color: var(--primary); border: 1px solid var(--primary); width: 100%; margin-top: 10px; }
+
         #friendList { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         #friendList li { background: #e8f0fe; color: var(--primary); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; }
-        .result-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; border-radius: 10px; margin-bottom: 8px; }
+        
+        .result-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px; 
+            border-bottom: 1px solid #f0f0f0; 
+            background: #fafafa; 
+            border-radius: 10px; 
+            margin-bottom: 8px; 
+        }
         .owe { color: var(--danger); font-weight: bold; }
         .placeholder { color: #999; text-align: center; font-style: italic; padding: 20px 0; }
     </style>
@@ -120,7 +142,7 @@
             <span>Zoom</span>
             <input type="range" id="zoomSlider" min="100" max="300" value="100" oninput="adjustZoom(this.value)">
         </div>
-        <button class="edit-banner-btn" onclick="document.getElementById('bannerInput').click()">📸 Upload</button>
+        <button class="edit-banner-btn" onclick="document.getElementById('bannerInput').click()">📸 Photo</button>
     </div>
     <input type="file" id="bannerInput" style="display: none;" accept="image/*" onchange="processAndUploadImage(this)">
 </div>
@@ -129,7 +151,7 @@
 
 <div class="container">
     <div class="card">
-        <h3>1. Who's on the trip?</h3>
+        <h3>1. Trip Members</h3>
         <div class="input-row">
             <input type="text" id="friendName" placeholder="Name" autocomplete="off">
             <button onclick="addFriend()">Add</button>
@@ -138,17 +160,17 @@
     </div>
 
     <div class="card">
-        <h3>2. Log an Expense</h3>
-        <input type="text" id="description" placeholder="Description (e.g. Gas, Hotel)" autocomplete="off">
+        <h3>2. Add Expense</h3>
+        <input type="text" id="description" placeholder="Description (e.g. Gas, Dinner)" autocomplete="off">
         <input type="number" id="amount" placeholder="Amount ($)" inputmode="decimal">
         <select id="payerSelect"><option disabled selected>Who paid?</option></select>
         <button class="btn-primary" onclick="addExpense()">Add Expense</button>
     </div>
 
     <div class="card">
-        <h3>3. The Settlement</h3>
-        <div id="settlementReport"><p class="placeholder">Add names to see the split.</p></div>
-        <button id="copyBtn" class="btn-outline" onclick="copyResults()" style="display:none;">📋 Copy to Group Chat</button>
+        <h3>3. Settlements</h3>
+        <div id="settlementReport"><p class="placeholder">Add data to calculate.</p></div>
+        <button id="copyBtn" class="btn-outline" onclick="copyResults()" style="display:none;">📋 Copy Summary</button>
     </div>
 
     <div class="card">
@@ -156,7 +178,7 @@
         <div id="expenseHistory"></div>
     </div>
 
-    <button onclick="resetTrip()" class="btn-danger">🗑️ Clear Trip Data</button>
+    <button onclick="resetTrip()" class="btn-danger">🗑️ Clear All Data</button>
 </div>
 
 <script>
@@ -189,14 +211,14 @@
                 img.onload = function() {
                     const canvas = document.getElementById('resizeCanvas');
                     const ctx = canvas.getContext('2d');
-                    const maxWidth = 1200;
+                    const maxWidth = 1000;
                     const scale = maxWidth / img.width;
                     canvas.width = maxWidth;
                     canvas.height = img.height * scale;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
                     document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${optimizedDataUrl})`;
-                    try { localStorage.setItem('tripBannerImg', optimizedDataUrl); } catch (err) { alert("Photo too large."); }
+                    try { localStorage.setItem('tripBannerImg', optimizedDataUrl); } catch (err) { alert("Try a smaller photo."); }
                 };
                 img.src = e.target.result;
             };
@@ -224,7 +246,7 @@
         const amtInput = document.getElementById('amount');
         const payer = document.getElementById('payerSelect');
         const amount = parseFloat(amtInput.value);
-        if (!amount || amount <= 0 || !payer.value) return alert("Fill all fields.");
+        if (!amount || amount <= 0 || !payer.value) return;
         expenses.push({ id: Date.now(), description: desc.value || "Expense", amount, payerName: payer.value });
         amtInput.value = ''; desc.value = '';
         saveData(); calculateSplits();
@@ -236,7 +258,7 @@
     }
 
     function resetTrip() {
-        if(confirm("Erase all data?")) { localStorage.clear(); location.reload(); }
+        if(confirm("Erase all trip data?")) { localStorage.clear(); location.reload(); }
     }
 
     function updateUI() {
@@ -282,7 +304,7 @@
         const report = document.getElementById('settlementReport');
         if (friends.length === 0) return;
         let html = `<strong>Total: $${total.toFixed(2)}</strong><br><small>Each: $${share.toFixed(2)}</small><hr>`;
-        let text = `Banff Trip Summary:\nTotal: $${total.toFixed(2)}\n\n`;
+        let text = `Gadhar Doler Banff Trip Summary:\nTotal: $${total.toFixed(2)}\n\n`;
         transfers.forEach(t => {
             html += `<div class="result-item"><span>${t.from} ➔ ${t.to}</span><span class="owe">$${t.amount.toFixed(2)}</span></div>`;
             text += `• ${t.from} pays ${t.to}: $${t.amount.toFixed(2)}\n`;
@@ -293,10 +315,15 @@
     }
 
     function copyResults() {
-        navigator.clipboard.writeText(lastTransferText).then(() => alert("Copied for the group chat!"));
+        navigator.clipboard.writeText(lastTransferText).then(() => alert("Copied for group chat!"));
     }
 
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
+    // Register Service Worker with relative path for GitHub Pages
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+        });
+    }
 </script>
 </body>
 </html>
