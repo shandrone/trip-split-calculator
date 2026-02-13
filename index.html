@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gadhar Doler Banff Trip</title>
     
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#1a73e8">
@@ -30,7 +30,6 @@
             padding-bottom: 30px;
         }
 
-        /* --- HERO BANNER --- */
         .hero-banner {
             position: relative;
             width: 100%;
@@ -136,7 +135,6 @@
 
 <div class="hero-banner" id="heroBanner">
     <h1>🏔️ Gadhar Doler Banff Trip</h1>
-    
     <div class="banner-controls">
         <div class="zoom-slider-container">
             <span>Zoom</span>
@@ -161,7 +159,7 @@
 
     <div class="card">
         <h3>2. Add Expense</h3>
-        <input type="text" id="description" placeholder="Description (e.g. Gas, Dinner)" autocomplete="off">
+        <input type="text" id="description" placeholder="Description" autocomplete="off">
         <input type="number" id="amount" placeholder="Amount ($)" inputmode="decimal">
         <select id="payerSelect"><option disabled selected>Who paid?</option></select>
         <button class="btn-primary" onclick="addExpense()">Add Expense</button>
@@ -169,7 +167,7 @@
 
     <div class="card">
         <h3>3. Settlements</h3>
-        <div id="settlementReport"><p class="placeholder">Add data to calculate.</p></div>
+        <div id="settlementReport"><p class="placeholder">Add names to see the split.</p></div>
         <button id="copyBtn" class="btn-outline" onclick="copyResults()" style="display:none;">📋 Copy Summary</button>
     </div>
 
@@ -178,10 +176,20 @@
         <div id="expenseHistory"></div>
     </div>
 
-    <button onclick="resetTrip()" class="btn-danger">🗑️ Clear All Data</button>
+    <button onclick="resetTrip()" class="btn-danger">🗑️ Clear Trip Data</button>
 </div>
 
 <script>
+    // Register Service Worker with STRICT relative path
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            // Using './sw.js' ensures it looks inside the /banff-trip/ folder
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW success:', reg.scope))
+                .catch(err => console.log('SW failure:', err));
+        });
+    }
+
     let friends = JSON.parse(localStorage.getItem('tripFriends')) || [];
     let expenses = JSON.parse(localStorage.getItem('tripExpenses')) || [];
     let lastTransferText = "";
@@ -218,7 +226,7 @@
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
                     document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${optimizedDataUrl})`;
-                    try { localStorage.setItem('tripBannerImg', optimizedDataUrl); } catch (err) { alert("Try a smaller photo."); }
+                    try { localStorage.setItem('tripBannerImg', optimizedDataUrl); } catch (err) { alert("Photo too large."); }
                 };
                 img.src = e.target.result;
             };
@@ -316,13 +324,6 @@
 
     function copyResults() {
         navigator.clipboard.writeText(lastTransferText).then(() => alert("Copied for group chat!"));
-    }
-
-    // Register Service Worker with relative path for GitHub Pages
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-        });
     }
 </script>
 </body>
